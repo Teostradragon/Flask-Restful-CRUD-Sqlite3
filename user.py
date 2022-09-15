@@ -111,16 +111,21 @@ class User(Resource):
 
 # Delete one item
     def delete(self, username):
-        connection = sqlite3.connect('data.db')
-        cursor = connection.cursor()
+        if self.find_by_username(username):
 
-        query = "DELETE FROM users WHERE username=?"
-        cursor.execute(query, (username,))
+          connection = sqlite3.connect('data.db')
+          cursor = connection.cursor()
 
-        connection.commit()
-        connection.close()
+          query = "DELETE FROM users WHERE username=?"
+          cursor.execute(query, (username,))
 
-        return {'message': 'user deleted'}
+          connection.commit()
+          connection.close()
+
+          return {'message': 'user deleted'}
+        else:
+          return {'message': 'user not found'}, 404
+
 
 # Updates one user
     def put(self, username):
